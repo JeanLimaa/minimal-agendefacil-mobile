@@ -1,32 +1,37 @@
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text, Image, StyleSheet, Modal, Button } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
+import { View, Text, Image, StyleSheet, Modal, Button } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AppointmentPage from "./appointment";
 import NewAppointmentPage from "./appointment/new-appointment";
 import { Appbar } from "react-native-paper";
 import { ProtectRoute } from "@/shared/components/ProtectRoute";
 import AppointmentEditPage from "./appointment/[appointmentEditId]";
 import BlockPage from "./appointment/block";
-import { Colors } from '@/shared/constants/Colors';
-import { useAuth } from '@/modules/auth/contexts/AuthContext';
-import { useMe } from '@/shared/hooks/queries/useMe';
-import { Loading } from '@/shared/components/Loading';
-import ErrorScreen from '../ErrorScreen';
-import { useState } from 'react';
-import { MyLink } from '@/modules/my-link/MyLink';
-import { SuspenseLoading } from '@/shared/components/SuspenseLoading';
+import { Colors } from "@/shared/constants/Colors";
+import { useAuth } from "@/modules/auth/contexts/AuthContext";
+import { useMe } from "@/shared/hooks/queries/useMe";
+import { Loading } from "@/shared/components/Loading";
+import ErrorScreen from "../ErrorScreen";
+import { useState } from "react";
+import { MyLink } from "@/modules/my-link/MyLink";
+import { SuspenseLoading } from "@/shared/components/SuspenseLoading";
 import ClientsPage from "./clients";
-import NewClientPage from './clients/new';
-import ImportContactsPage from './clients/import';
-import EditClientPage from './clients/edit';
-import AppointmentsHistoryPage from './clients/appointments-history';
+import NewClientPage from "./clients/new";
+import ImportContactsPage from "./clients/import";
+import EditClientPage from "./clients/edit";
+import AppointmentsHistoryPage from "./clients/appointments-history";
 import WorkingHoursScreen from "./settings/booking-and-website/working-hours";
 import CompanyProfileScreen from "./settings/booking-and-website/company-profile";
 import ServicesScreen from "./settings/records/services";
 import ChangePasswordScreen from "./settings/security/change-password";
-import SettingsPage from './settings';
-import { AddOrEditService } from '@/modules/settings/components/Services/AddOrEditService';
+import SettingsPage from "./settings";
+import { AddOrEditService } from "@/modules/settings/components/Services/AddOrEditService";
 import { Header } from "@/shared/components/Header/Header";
 
 const Drawer = createDrawerNavigator();
@@ -36,24 +41,48 @@ function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DrawerScreens" component={DrawerNavigator} />
-      <Stack.Screen name="appointment/new-appointment" component={NewAppointmentPage} />
-      <Stack.Screen name="appointment/[appointmentEditId]" component={AppointmentEditPage} />
+      <Stack.Screen
+        name="appointment/new-appointment"
+        component={NewAppointmentPage}
+      />
+      <Stack.Screen
+        name="appointment/[appointmentEditId]"
+        component={AppointmentEditPage}
+      />
       <Stack.Screen name="appointment/block" component={BlockPage} />
 
       <Stack.Screen name="clients/new" component={NewClientPage} />
       <Stack.Screen name="clients/edit" component={EditClientPage} />
       <Stack.Screen name="clients/import" component={ImportContactsPage} />
-      <Stack.Screen name="clients/appointments-history" component={AppointmentsHistoryPage} />
+      <Stack.Screen
+        name="clients/appointments-history"
+        component={AppointmentsHistoryPage}
+      />
 
       <Stack.Screen name="settings" component={SettingsPage} />
-      <Stack.Screen name="settings/booking-and-website/working-hours" component={WorkingHoursScreen} />
-      <Stack.Screen name="settings/booking-and-website/company-profile" component={CompanyProfileScreen} />
+      <Stack.Screen
+        name="settings/booking-and-website/working-hours"
+        component={WorkingHoursScreen}
+      />
+      <Stack.Screen
+        name="settings/booking-and-website/company-profile"
+        component={CompanyProfileScreen}
+      />
 
-      <Stack.Screen name="settings/records/services" component={ServicesScreen} />
-      
-      <Stack.Screen name="settings/security/change-password" component={ChangePasswordScreen} />
+      <Stack.Screen
+        name="settings/records/services"
+        component={ServicesScreen}
+      />
 
-      <Stack.Screen name="settings/records/services/service-form" component={AddOrEditService} />
+      <Stack.Screen
+        name="settings/security/change-password"
+        component={ChangePasswordScreen}
+      />
+
+      <Stack.Screen
+        name="settings/records/services/service-form"
+        component={AddOrEditService}
+      />
     </Stack.Navigator>
   );
 }
@@ -73,25 +102,19 @@ function CustomDrawerContent(props: any) {
     <View style={{ flex: 1, backgroundColor: Colors.light.background }}>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerHeader}>
-          <Image
-            source={require('../../../assets/images/icon.png')}
-            style={styles.logo}
-          />
           {user ? (
             <View>
-            <SuspenseLoading
-              isLoading={userInfoLoading}
-              fallback={<Loading />}
-            >
-              <Text style={styles.companyName}>{user.companyName}</Text>
-              <Text style={styles.userName}>{user.name}</Text>
-            </SuspenseLoading>
-          </View>
-        ) : (
-          <Text>
-            Erro ao carregar usuário
-          </Text>
-        )}
+              <SuspenseLoading
+                isLoading={userInfoLoading}
+                fallback={<Loading />}
+              >
+                <Text style={styles.companyName}>{user.companyName}</Text>
+                <Text style={styles.userName}>{user.name}</Text>
+              </SuspenseLoading>
+            </View>
+          ) : (
+            <Text>Erro ao carregar usuário</Text>
+          )}
         </View>
 
         <DrawerItemList {...props} />
@@ -99,24 +122,29 @@ function CustomDrawerContent(props: any) {
         <DrawerItem
           label="Meu link"
           labelStyle={{ color: Colors.light.text }}
-          icon={({ color, size }) => (
-            <MaterialCommunityIcons name="link-variant" color={color} size={size} />
+          icon={({ size }) => (
+            <MaterialCommunityIcons
+              name="link-variant"
+              color={Colors.light.mainColor}
+              size={size}
+            />
           )}
           onPress={handleMyLink}
         />
-
       </DrawerContentScrollView>
 
-      <View style={styles.logoutSection}>
-        <DrawerItem
-          label="Sair"
-          labelStyle={{ color: Colors.light.text }}
-          icon={({ color, size }) => (
-            <MaterialCommunityIcons name="logout" color={color} size={size} />
-          )}
-          onPress={logout}
-        />
-      </View>
+      <DrawerItem
+        label="Sair"
+        labelStyle={{ color: Colors.light.text }}
+        icon={({ size }) => (
+          <MaterialCommunityIcons
+            name="logout"
+            color={Colors.light.mainColor}
+            size={size}
+          />
+        )}
+        onPress={logout}
+      />
 
       <MyLink
         visible={myLinkModalVisible}
@@ -129,13 +157,13 @@ function CustomDrawerContent(props: any) {
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      initialRouteName='Agendamentos'
+      initialRouteName="Agendamentos"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle: { width: "80%" },
         header: ({ navigation, options, route }) => (
           <Header navigation={navigation}>
-             <Appbar.Content title={options.title ?? route.name} />
+            <Appbar.Content title={options.title ?? route.name} />
           </Header>
         ),
         drawerActiveTintColor: Colors.light.mainColor,
@@ -148,7 +176,11 @@ function DrawerNavigator() {
         options={{
           title: "Agendamentos",
           drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="calendar-check-outline" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="calendar-check-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -158,7 +190,11 @@ function DrawerNavigator() {
         options={{
           title: "Clientes",
           drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account-group-outline" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="account-group-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -168,7 +204,11 @@ function DrawerNavigator() {
         options={{
           title: "Configurações",
           drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cog-outline" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="cog-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -189,10 +229,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 40,
     paddingBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   logo: {
     width: 50,
@@ -201,7 +241,7 @@ const styles = StyleSheet.create({
   },
   companyName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Colors.light.text,
   },
   userName: {
@@ -210,7 +250,7 @@ const styles = StyleSheet.create({
   },
   logoutSection: {
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: "#e0e0e0",
     paddingVertical: 10,
   },
 });

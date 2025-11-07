@@ -5,33 +5,33 @@ import { styles } from "../styles/styles";
 import React from "react";
 import { useAuth } from "@/modules/auth/contexts/AuthContext";
 import { BASE_URL } from "@/shared/constants/apiUrl";
-import {Entypo, Feather} from '@expo/vector-icons/';
+import { Entypo, Feather } from "@expo/vector-icons/";
 import { InputIconContainer } from "./InputIconContainer";
 import { Colors } from "@/shared/constants/Colors";
 
 export function LoginComponent() {
   const { login } = useAuth();
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState<string>();
 
   async function handleLogin() {
-    setErrorMessage('');
+    setErrorMessage("");
 
     if (!loginData.email || !loginData.password) {
-      setErrorMessage('O email e a senha são obrigatórios');
+      setErrorMessage("O email e a senha são obrigatórios");
       return;
     }
-    
+
     try {
       const response = await fetch(`${BASE_URL}/auth/login`, {
         body: JSON.stringify(loginData),
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      
-      if(!response.ok){
+
+      if (!response.ok) {
         const errorData = await response.json();
         setErrorMessage(errorData.message);
         return;
@@ -40,9 +40,11 @@ export function LoginComponent() {
       const data = await response.json();
       login(data.access_token);
     } catch (error) {
-      setErrorMessage('Algum erro ocorreu ao realizar login. Tente novamente mais tarde.');
+      setErrorMessage(
+        "Algum erro ocorreu ao realizar login. Tente novamente mais tarde."
+      );
     }
-  };
+  }
 
   return (
     <>
@@ -54,7 +56,7 @@ export function LoginComponent() {
           style={styles.input}
           placeholder="E-mail"
           value={loginData.email}
-          onChangeText={(email) => setLoginData(prev => ({...prev, email}))}
+          onChangeText={(email) => setLoginData((prev) => ({ ...prev, email }))}
           keyboardType="email-address"
         />
       </InputIconContainer>
@@ -65,12 +67,18 @@ export function LoginComponent() {
           style={styles.input}
           placeholder="Senha"
           value={loginData.password}
-          onChangeText={(password) => setLoginData(prev => ({...prev, password}))}
+          onChangeText={(password) =>
+            setLoginData((prev) => ({ ...prev, password }))
+          }
           secureTextEntry
         />
       </InputIconContainer>
-      
-      <Button color={Colors.light.mainColor} title="Entrar" onPress={handleLogin} />
+
+      <Button
+        color={Colors.light.background}
+        title="Entrar"
+        onPress={handleLogin}
+      />
     </>
-  )
+  );
 }

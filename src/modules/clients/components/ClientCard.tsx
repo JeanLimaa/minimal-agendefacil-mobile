@@ -6,7 +6,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Client } from "@/shared/types/client.interface";
 import { GenericalCard } from "@/shared/components/GenericalCard";
 
-export function ClientCard({ client, onPress }: { client: Client; onPress: () => void }) {
+export function ClientCard({
+  client,
+  onPress,
+}: {
+  client: Client;
+  onPress: () => void;
+}) {
   const isBlocked = client?.isBlocked;
 
   return (
@@ -34,7 +40,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Colors.light.text,
+    color: Colors.light.textSecondary,
     marginBottom: 4,
   },
   phone: {

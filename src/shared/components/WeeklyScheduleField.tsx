@@ -5,7 +5,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { GenericalCard } from "./GenericalCard";
 import { Colors } from "../constants/Colors";
-import { FieldValue, FormDataType, GenericFormField } from "@/modules/settings/components/GenericForm";
+import {
+  FieldValue,
+  FormDataType,
+  GenericFormField,
+} from "@/modules/settings/components/GenericForm";
 import { DailyWorkingHour } from "../types/working-hours.interface";
 import { useConfirm } from "../hooks/useConfirm";
 import { WorkingHoursModal } from "./WorkingHoursModal/WorkingHoursModal";
@@ -50,7 +54,7 @@ interface ValidationError {
 // Utilitários para validação de horário
 const parseTime = (timeString: string): number | null => {
   if (!timeString || !timeString.match(/^\d{2}:\d{2}$/)) return null;
-  const [hours, minutes] = timeString.split(':').map(Number);
+  const [hours, minutes] = timeString.split(":").map(Number);
   if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
   return hours * 60 + minutes;
 };
@@ -71,16 +75,15 @@ export default function WeeklyScheduleField({
   modalTitle = "Configurar Horários",
   modalSubtitle,
   companyWorkingHours,
-  type
+  type,
 }: WeeklyScheduleFieldProps) {
-  const {
-    confirm,
-    ConfirmDialogComponent
-  } = useConfirm();
+  const { confirm, ConfirmDialogComponent } = useConfirm();
   const [expanded, setExpanded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ [day: string]: ValidationError | null }>({});
+  const [errors, setErrors] = useState<{
+    [day: string]: ValidationError | null;
+  }>({});
   const [timePickerState, setTimePickerState] = useState<{
     dayKey: string;
     type: "startTime" | "endTime";
@@ -92,25 +95,41 @@ export default function WeeklyScheduleField({
     return (formData[field.name] as DailyWorkingHour[]) || [];
   }, [formData, field.name]);
 
-
   // Função para obter horário atual de um dia específico
-  const getScheduleByDay = (dayOfWeek: number): DailyWorkingHour | undefined => {
-    return currentSchedule.find((entry: DailyWorkingHour) => entry.dayOfWeek === dayOfWeek);
+  const getScheduleByDay = (
+    dayOfWeek: number
+  ): DailyWorkingHour | undefined => {
+    return currentSchedule.find(
+      (entry: DailyWorkingHour) => entry.dayOfWeek === dayOfWeek
+    );
   };
 
   // Função para validar um dia específico
-  const validateDay = (dayKey: string, startTime: string, endTime: string): ValidationError | null => {
+  const validateDay = (
+    dayKey: string,
+    startTime: string,
+    endTime: string
+  ): ValidationError | null => {
     if (startTime && !endTime) {
-      return { type: "missing_end", message: "Informe também o horário de fim" };
+      return {
+        type: "missing_end",
+        message: "Informe também o horário de fim",
+      };
     }
 
     if (endTime && !startTime) {
-      return { type: "missing_start", message: "Informe também o horário de início" };
+      return {
+        type: "missing_start",
+        message: "Informe também o horário de início",
+      };
     }
 
     if (startTime && endTime) {
       if (!isValidTimeRange(startTime, endTime)) {
-        return { type: "invalid_range", message: "Horário de início deve ser menor que o de fim" };
+        return {
+          type: "invalid_range",
+          message: "Horário de início deve ser menor que o de fim",
+        };
       }
     }
 
@@ -124,7 +143,11 @@ export default function WeeklyScheduleField({
     weekdays.forEach((day) => {
       const schedule = getScheduleByDay(day.dayOfWeek);
       if (schedule) {
-        const error = validateDay(day.key, schedule.startTime || "", schedule.endTime || "");
+        const error = validateDay(
+          day.key,
+          schedule.startTime || "",
+          schedule.endTime || ""
+        );
         newErrors[day.key] = error;
       }
     });
@@ -135,16 +158,15 @@ export default function WeeklyScheduleField({
     }
   }, [currentSchedule]);
 
-
   const showPicker = (dayKey: string, type: "startTime" | "endTime") => {
-    const day = weekdays.find(d => d.key === dayKey);
+    const day = weekdays.find((d) => d.key === dayKey);
     if (!day) return;
 
     const schedule = getScheduleByDay(day.dayOfWeek);
     let initialTime = new Date();
 
     if (schedule && schedule[type]) {
-      const [hours, minutes] = schedule[type].split(':').map(Number);
+      const [hours, minutes] = schedule[type].split(":").map(Number);
       initialTime.setHours(hours, minutes, 0, 0);
     } else {
       // Horários padrão sugeridos
@@ -159,7 +181,7 @@ export default function WeeklyScheduleField({
       dayKey,
       type,
       show: true,
-      currentTime: initialTime
+      currentTime: initialTime,
     });
   };
 
@@ -172,7 +194,7 @@ export default function WeeklyScheduleField({
       message: `Deseja remover o horário de ${day.label}?`,
       cancelText: "Cancelar",
       confirmText: "Remover",
-    })
+    });
 
     if (!confirmDelete) return;
 
@@ -201,7 +223,9 @@ export default function WeeklyScheduleField({
 
     // Criar uma cópia atualizada do schedule
     let updatedSchedule: DailyWorkingHour[] = [...currentSchedule];
-    const existingIndex = updatedSchedule.findIndex((entry) => entry.dayOfWeek === day.dayOfWeek);
+    const existingIndex = updatedSchedule.findIndex(
+      (entry) => entry.dayOfWeek === day.dayOfWeek
+    );
 
     if (existingIndex >= 0) {
       // Atualizar entrada existente
@@ -227,7 +251,7 @@ export default function WeeklyScheduleField({
   };
 
   const copyToAllDays = async (sourceDayKey: string) => {
-    const sourceDay = weekdays.find(d => d.key === sourceDayKey);
+    const sourceDay = weekdays.find((d) => d.key === sourceDayKey);
     if (!sourceDay) return;
 
     const sourceSchedule = getScheduleByDay(sourceDay.dayOfWeek);
@@ -242,7 +266,7 @@ export default function WeeklyScheduleField({
 
     if (!confirmCopy) return;
 
-    const newSchedule = weekdays.map(day => ({
+    const newSchedule = weekdays.map((day) => ({
       dayOfWeek: day.dayOfWeek,
       startTime: sourceSchedule.startTime,
       endTime: sourceSchedule.endTime,
@@ -256,7 +280,7 @@ export default function WeeklyScheduleField({
       handleChange(field.name, hours);
       setModalVisible(false);
     } catch (error) {
-      console.error('Erro ao salvar horários:', error);
+      console.error("Erro ao salvar horários:", error);
     } finally {
       setLoading(false);
     }
@@ -275,15 +299,36 @@ export default function WeeklyScheduleField({
   );
 
   const getActiveDaysCount = () => {
-    return currentSchedule.filter(entry => entry.startTime && entry.endTime).length;
+    return currentSchedule.filter((entry) => entry.startTime && entry.endTime)
+      .length;
   };
 
   const renderQuickActions = () => {
     const commonSchedules = [
-      { name: "Seg-Sex 8h-17h", days: [1, 2, 3, 4, 5], start: "08:00", end: "17:00" },
-      { name: "Seg-Sex 9h-18h", days: [1, 2, 3, 4, 5], start: "09:00", end: "18:00" },
-      { name: "Seg-Sáb 8h-17h", days: [1, 2, 3, 4, 5, 6], start: "08:00", end: "17:00" },
-      { name: "Todos os dias 8h-17h", days: [0, 1, 2, 3, 4, 5, 6], start: "08:00", end: "17:00" },
+      {
+        name: "Seg-Sex 8h-17h",
+        days: [1, 2, 3, 4, 5],
+        start: "08:00",
+        end: "17:00",
+      },
+      {
+        name: "Seg-Sex 9h-18h",
+        days: [1, 2, 3, 4, 5],
+        start: "09:00",
+        end: "18:00",
+      },
+      {
+        name: "Seg-Sáb 8h-17h",
+        days: [1, 2, 3, 4, 5, 6],
+        start: "08:00",
+        end: "17:00",
+      },
+      {
+        name: "Todos os dias 8h-17h",
+        days: [0, 1, 2, 3, 4, 5, 6],
+        start: "08:00",
+        end: "17:00",
+      },
     ];
 
     return (
@@ -296,7 +341,7 @@ export default function WeeklyScheduleField({
               mode="outlined"
               style={styles.quickActionChip}
               onPress={() => {
-                const newSchedule = schedule.days.map(dayOfWeek => ({
+                const newSchedule = schedule.days.map((dayOfWeek) => ({
                   dayOfWeek,
                   startTime: schedule.start,
                   endTime: schedule.end,
@@ -318,7 +363,8 @@ export default function WeeklyScheduleField({
         <View style={styles.emptyState}>
           <MaterialIcons name="schedule" size={24} color="#999" />
           <Text style={styles.emptyStateText}>
-            {field.placeholder || "Nenhum horário definido. Será utilizado o horário da empresa."}
+            {field.placeholder ||
+              "Nenhum horário definido. Será utilizado o horário da empresa."}
           </Text>
         </View>
       );
@@ -330,7 +376,8 @@ export default function WeeklyScheduleField({
       <View style={styles.summaryContainer}>
         <View style={styles.summaryHeader}>
           <Text style={styles.summaryTitle}>
-            {activeDays} {activeDays === 1 ? 'dia configurado' : 'dias configurados'}
+            {activeDays}{" "}
+            {activeDays === 1 ? "dia configurado" : "dias configurados"}
           </Text>
         </View>
 
@@ -340,16 +387,29 @@ export default function WeeklyScheduleField({
             const isActive = schedule?.startTime && schedule?.endTime;
 
             return (
-              isActive && <View key={day.key} style={[styles.summaryDay, isActive && styles.summaryDayActive]}>
-                <Text style={[styles.summaryDayLabel, isActive && styles.summaryDayLabelActive]}>
-                  {day.label}
-                </Text>
-                {isActive && (
-                  <Text style={styles.summaryDayTime}>
-                    {schedule?.startTime}-{schedule?.endTime}h
+              isActive && (
+                <View
+                  key={day.key}
+                  style={[
+                    styles.summaryDay,
+                    isActive && styles.summaryDayActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.summaryDayLabel,
+                      isActive && styles.summaryDayLabelActive,
+                    ]}
+                  >
+                    {day.label}
                   </Text>
-                )}
-              </View>
+                  {isActive && (
+                    <Text style={styles.summaryDayTime}>
+                      {schedule?.startTime}-{schedule?.endTime}h
+                    </Text>
+                  )}
+                </View>
+              )
             );
           })}
         </View>
@@ -368,9 +428,13 @@ export default function WeeklyScheduleField({
           mode="text"
           onPress={handleEditClick}
           style={{ marginTop: 8 }}
-          icon={useModal ? "pencil" : (expanded ? "chevron-up" : "chevron-down")}
+          icon={useModal ? "pencil" : expanded ? "chevron-up" : "chevron-down"}
         >
-          {useModal ? "Editar horários" : (expanded ? "Fechar edição" : "Editar horários")}
+          {useModal
+            ? "Editar horários"
+            : expanded
+            ? "Fechar edição"
+            : "Editar horários"}
         </Button>
       </View>
 
@@ -383,7 +447,8 @@ export default function WeeklyScheduleField({
               const schedule = getScheduleByDay(day.dayOfWeek);
               const start = schedule?.startTime || "";
               const end = schedule?.endTime || "";
-              const hasError = errors[day.key] !== null && errors[day.key] !== undefined;
+              const hasError =
+                errors[day.key] !== null && errors[day.key] !== undefined;
 
               return (
                 <GenericalCard
@@ -395,13 +460,19 @@ export default function WeeklyScheduleField({
                 >
                   <View style={styles.dayHeader}>
                     <Text style={styles.dayLabel}>{day.label}</Text>
-                    {(start && end && !hasError) && (
+                    {start && end && !hasError && (
                       <Pressable
                         onPress={() => copyToAllDays(day.key)}
                         style={styles.copyButton}
                       >
-                        <MaterialIcons name="content-copy" size={16} color={Colors.light.mainColor} />
-                        <Text style={styles.copyButtonText}>Copiar para todos</Text>
+                        <MaterialIcons
+                          name="content-copy"
+                          size={16}
+                          color={Colors.light.mainColor}
+                        />
+                        <Text style={styles.copyButtonText}>
+                          Copiar para todos
+                        </Text>
                       </Pressable>
                     )}
                   </View>
@@ -409,18 +480,28 @@ export default function WeeklyScheduleField({
                   <View style={styles.timeInputs}>
                     <Button
                       mode="outlined"
-                      style={[styles.timeButton, start && styles.timeButtonFilled]}
+                      style={[
+                        styles.timeButton,
+                        start && styles.timeButtonFilled,
+                      ]}
                       onPress={() => showPicker(day.key, "startTime")}
                       icon="clock-outline"
                     >
                       {start ? start : "Início"}
                     </Button>
 
-                    <MaterialIcons name="arrow-forward" size={20} color="#999" />
+                    <MaterialIcons
+                      name="arrow-forward"
+                      size={20}
+                      color="#999"
+                    />
 
                     <Button
                       mode="outlined"
-                      style={[styles.timeButton, end && styles.timeButtonFilled]}
+                      style={[
+                        styles.timeButton,
+                        end && styles.timeButtonFilled,
+                      ]}
                       onPress={() => showPicker(day.key, "endTime")}
                       icon="clock-outline"
                     >
@@ -428,8 +509,15 @@ export default function WeeklyScheduleField({
                     </Button>
 
                     {(start || end) && (
-                      <Pressable onPress={() => clearDay(day.key)} style={styles.deleteButton}>
-                        <Ionicons name="trash-bin-outline" size={20} color="#d00" />
+                      <Pressable
+                        onPress={() => clearDay(day.key)}
+                        style={styles.deleteButton}
+                      >
+                        <Ionicons
+                          name="trash-bin-outline"
+                          size={20}
+                          color="#d00"
+                        />
                       </Pressable>
                     )}
                   </View>
@@ -479,7 +567,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.light.text,
+    color: Colors.light.textSecondary,
     marginBottom: 4,
   },
   container: {
@@ -487,7 +575,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     padding: 16,
-    backgroundColor: Colors.light.background,
+    backgroundColor: Colors.light.text,
   },
   emptyState: {
     alignItems: "center",
@@ -509,7 +597,7 @@ const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.light.text,
+    color: Colors.light.background,
   },
   summaryGrid: {
     flexDirection: "row",
@@ -524,9 +612,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   summaryDayActive: {
-    backgroundColor: Colors.light.mainColor + "20",
+    backgroundColor: Colors.light.background + "20",
     borderWidth: 1,
-    borderColor: Colors.light.mainColor + "40",
+    borderColor: Colors.light.background + "40",
   },
   summaryDayLabel: {
     fontSize: 12,
@@ -534,11 +622,11 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   summaryDayLabelActive: {
-    color: Colors.light.mainColor,
+    color: Colors.light.background,
   },
   summaryDayTime: {
     fontSize: 10,
-    color: Colors.light.mainColor,
+    color: Colors.light.background,
     marginTop: 2,
   },
   quickActions: {
