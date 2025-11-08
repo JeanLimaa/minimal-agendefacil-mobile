@@ -56,7 +56,11 @@ export function ClientFormScreen({
       ? await api.put(`/clients/${clientId}`, { name, email, phone }) 
       : await api.post("/clients", { name, email, phone });
 
-      queryClient.invalidateQueries(isEdit ? {queryKey: ["client", clientId]} : { queryKey: ["clients"] });
+      // Invalidar tanto a lista de clientes quanto o cliente individual
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      if (isEdit) {
+        queryClient.invalidateQueries({ queryKey: ["client", clientId] });
+      }
 
       Toast.show({
         type: "success",
