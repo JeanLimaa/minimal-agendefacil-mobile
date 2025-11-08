@@ -56,7 +56,7 @@ export function AppointmentForm({ appointmentEditId }: { appointmentEditId?: str
       setSelectedClient(editItemData.client);
       setDate(format(editItemData.date, 'yyyy-MM-dd'));
       setTime(new Date(editItemData.date));
-      // Discount pode ser calculado a partir do notes ou price vs sum of services
+      setDiscount(editItemData.discount || 0);
     }
   }, [editItemData]);
 

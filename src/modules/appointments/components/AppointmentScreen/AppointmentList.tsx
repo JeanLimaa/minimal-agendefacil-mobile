@@ -46,7 +46,7 @@ export function AppointmentList({
                     <Text style={styles.appointmentStatus}>{item.appointmentStatus}</Text>
                   </View>
                   <View style={styles.cardRow}>
-                    <Text>{`${item.timeStart} - ${item.timeEnd}`}</Text>
+                    <Text>{`${item.timeStart}h - ${item.timeEnd}h`}</Text>
                     <Text style={styles.price}>{item.totalPrice}</Text>
                   </View>
                 </Card.Content>

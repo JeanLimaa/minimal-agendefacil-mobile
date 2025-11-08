@@ -10,7 +10,9 @@ export interface IAppointment {
   companyId: number;
   duration: number;
   clientName: string;
-  client: Client
+  client: Client;
+  discount?: number;
+  subTotalPrice?: number;
 }
 
 export interface IAppointmentMapped {
