@@ -26,7 +26,6 @@ interface Block {
 export function BlockManagementScreen() {
     const queryClient = useQueryClient();
     const apiErrorHandler = useApiErrorHandler();
-    const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
     const { confirm, ConfirmDialogComponent } = useConfirm();
 
     // Buscar bloqueios
@@ -52,7 +51,6 @@ export function BlockManagementScreen() {
                 text2: 'O bloqueio foi removido com sucesso.',
                 position: 'bottom',
             });
-            setSelectedBlockId(null);
         },
         onError: (error) => {
             apiErrorHandler(error);
@@ -60,17 +58,15 @@ export function BlockManagementScreen() {
     });
 
     const handleDeletePress = async (blockId: string) => {
-        setSelectedBlockId(blockId);
-
         const confirmed = await confirm({
             title: 'Confirmar Exclusão',
             message: 'Tem certeza que deseja remover este bloqueio de horário?',
             confirmText: 'Excluir',
             cancelText: 'Cancelar',
         });
-
-        if (confirmed && selectedBlockId) {
-            deleteMutation.mutate(selectedBlockId);
+        
+        if (confirmed) {
+            deleteMutation.mutate(blockId);
         }
     };
 
