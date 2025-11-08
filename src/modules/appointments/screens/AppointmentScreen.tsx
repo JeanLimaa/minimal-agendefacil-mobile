@@ -21,12 +21,14 @@ export function AppointmentScreen() {
   if (logic.error) return <ErrorScreen onRetry={logic.refetch} message="Erro ao carregar agendamentos" />;
   if (logic.isLoading) return <Loading />
 
-  function handleFabOption(option: "new" | "block") {
+  function handleFabOption(option: "new" | "block" | "manage-blocks") {
     setFabModalVisible(false);
     if (option === "new") {
       router.push("/(tabs)/appointment/new-appointment");
     } else if (option === "block") {
       router.push("/(tabs)/appointment/block");
+    } else if (option === "manage-blocks") {
+      router.push("/(tabs)/appointment/blocks");
     }
   }
 
@@ -68,6 +70,11 @@ export function AppointmentScreen() {
             label: "Bloquear Agenda",
             action: () => handleFabOption("block"),
             icon: { name: "block", family: "MaterialIcons" },
+          },
+          {
+            label: "Gerenciar Bloqueios",
+            action: () => handleFabOption("manage-blocks"),
+            icon: { name: "list", family: "MaterialIcons" },
           },
         ]}
       />

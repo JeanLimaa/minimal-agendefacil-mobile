@@ -45,12 +45,13 @@ export function BlockForm() {
     };
 
     try {
-      // O backend vai pegar o companyId do token JWT automaticamente
       await api.post("/appointment/block", {
         startDate: startDateTime,
         endDate: endDateTime,
       });
+      
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['blocks'] });
 
       Toast.show({
         type: 'success',

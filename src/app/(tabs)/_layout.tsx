@@ -33,6 +33,7 @@ import ChangePasswordScreen from "./settings/security/change-password";
 import SettingsPage from "./settings";
 import { AddOrEditService } from "@/modules/settings/components/Services/AddOrEditService";
 import { Header } from "@/shared/components/Header/Header";
+import BlockManagementScreen from './appointment/blocks';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -50,6 +51,7 @@ function StackNavigator() {
         component={AppointmentEditPage}
       />
       <Stack.Screen name="appointment/block" component={BlockPage} />
+      <Stack.Screen name="appointment/blocks" component={BlockManagementScreen} />
 
       <Stack.Screen name="clients/new" component={NewClientPage} />
       <Stack.Screen name="clients/edit" component={EditClientPage} />
